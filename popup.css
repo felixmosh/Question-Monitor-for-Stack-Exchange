@@ -33,6 +33,9 @@ ul { padding: 0; list-style-type: none; }
 .numbers { float: left; width: 36px; text-align: center; font-size: 22px; padding: 0 10px 0 0; cursor: default; }
 .up_vote_count, .view_count, .answer_count { display: none; }
 .numbers > .visible { position: relative; display: block; }
+.view_count {
+  color: rgba(0,0,0,.4);
+}
 .answer_count {
   margin-top: 8px;
   color: #45A163;
