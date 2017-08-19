@@ -15,26 +15,26 @@ st.popup = st.popup || {};
  * The template used to render a single question
  */
 st.popup.QUESTION_TEMPLATE =
-'<li class="question {{className}}" data-question-id="{{questionId}}">' +
+  '<li class="question {{className}}" data-question-id="{{questionId}}">' +
   '<div class="numbers">' +
-    '<span class="view_count visible">{{viewCount}}</span>' +
-    '<span class="up_vote_count">{{upVoteCount}}</span>' +
-    '<span class="answer_count">{{answerCount}}</span>' +
+  '<span class="view_count visible">{{viewCount}}</span>' +
+  '<span class="up_vote_count">{{upVoteCount}}</span>' +
+  '<span class="answer_count visible">{{answerCount}}</span>' +
   '</div>' +
   '<div class="buttons">' +
-    '<a class="kd-button mini mark-read" style="-webkit-user-select: none;">' +
-        'mark read</a>' +
-    '<a class="kd-button mini mark-unread"' +
-        'style="-webkit-user-select: none;">mark unread</a>' +
+  '<a class="kd-button mini mark-read" style="-webkit-user-select: none;">' +
+  'mark read</a>' +
+  '<a class="kd-button mini mark-unread"' +
+  'style="-webkit-user-select: none;">mark unread</a>' +
   '</div>' +
   '<div class="name">{{title}}</div>' +
   '<div class="more">' +
-    '<span class="tags">{{tags}}</span>&nbsp;' +
-    '<span class="creation_date">Asked {{creationDate}}</span>&nbsp;by&nbsp;' +
-    '<span class="owner_display_name">{{ownerDisplayName}}</span>' +
-    ' (<span class="owner_reputation">{{ownerReputation}}</span>)' +
+  '<span class="tags">{{tags}}</span>&nbsp;' +
+  '<span class="creation_date">Asked {{creationDate}}</span>&nbsp;by&nbsp;' +
+  '<span class="owner_display_name">{{ownerDisplayName}}</span>' +
+  ' (<span class="owner_reputation">{{ownerReputation}}</span>)' +
   '</div>' +
-'</li>';
+  '</li>';
 
 /**
  * What the counts mean.
@@ -56,7 +56,7 @@ st.popup.COUNT_LABELS = {
  * @param {object} question Corresponding Question object.
  * @param {st.popup.QuestionListView} parentView Parent view.
  */
-st.popup.QuestionView = function(question, parentView) {
+st.popup.QuestionView = function (question, parentView) {
   this.question = question;
   this.countType = 0;
   this.parentView = parentView;
@@ -66,7 +66,7 @@ st.popup.QuestionView = function(question, parentView) {
  * Renders the question into a DOM element, and affixes proper event handlers.
  * @return {object} DOMElement.
  */
-st.popup.QuestionView.prototype.render = function() {
+st.popup.QuestionView.prototype.render = function () {
   var data = {};
   for (var key in this.question) {
     var value = this.question[key];
@@ -76,42 +76,42 @@ st.popup.QuestionView.prototype.render = function() {
   }
   data.creationDate = this.formatDate_(new Date(data.creationDate * 1000));
   data.lastActivityDate = this.formatDate_(
-      new Date(data.lastActivityDate * 1000));
+    new Date(data.lastActivityDate * 1000));
   data.ownerDisplayName = data.owner.displayName;
   data.ownerReputation = data.owner.reputation;
-  data.className = this.question.state == st.State.READ && 'read' || '';
+  data.className = this.question.state === st.State.READ && 'read' || '';
   data.tags = (this.parentView.shouldShowTags() ?
-               this.formatTag_(this.question.mainTag) : '');
+    this.formatTag_(this.question.mainTag, this.question.tags) : '');
 
   var html = this.renderTemplate_(st.popup.QUESTION_TEMPLATE, data);
   var el = this.makeElement_(html);
 
   var ctx = this;
   // Setup the click handler for the question.
-  el.addEventListener('click', function(e) {
+  el.addEventListener('click', function (e) {
     ctx.click();
   });
 
   // Setup the event handlers for the number on the left part of the question.
   var number = el.querySelector('.numbers');
-  number.addEventListener('click', function(e) {
+  number.addEventListener('click', function (e) {
     e.stopPropagation();
     ctx.numberClick();
   });
-  number.addEventListener('mouseover', function(e) {
+  number.addEventListener('mouseover', function (e) {
     ctx.numberOver(e);
   });
-  number.addEventListener('mouseout', function(e) {
+  number.addEventListener('mouseout', function (e) {
     ctx.numberOut(e);
   });
 
-  el.querySelector('.buttons').addEventListener('click', function(e) {
+  el.querySelector('.buttons').addEventListener('click', function (e) {
     e.stopPropagation();
   });
-  el.querySelector('.mark-read').addEventListener('click', function(e) {
+  el.querySelector('.mark-read').addEventListener('click', function (e) {
     ctx.markRead();
   });
-  el.querySelector('.mark-unread').addEventListener('click', function(e) {
+  el.querySelector('.mark-unread').addEventListener('click', function (e) {
     ctx.markUnread();
   });
 
@@ -123,7 +123,7 @@ st.popup.QuestionView.prototype.render = function() {
  * Handler for when the question is clicked.
  * Opens the question on SO and marks the question as read.
  */
-st.popup.QuestionView.prototype.click = function() {
+st.popup.QuestionView.prototype.click = function () {
   var id = this.question.questionId;
   // Mark the question as read.
   this.question.setState(st.State.READ);
@@ -138,7 +138,7 @@ st.popup.QuestionView.prototype.click = function() {
  * Toggles between number types.
  * @param {object} e Event payload.
  */
-st.popup.QuestionView.prototype.numberClick = function(e) {
+st.popup.QuestionView.prototype.numberClick = function (e) {
   this.countType = (this.countType + 1) % st.popup.COUNT_TYPES.length;
   var id = st.popup.COUNT_TYPES[this.countType];
   var label = st.popup.COUNT_LABELS[id];
@@ -162,7 +162,7 @@ st.popup.QuestionView.prototype.numberClick = function(e) {
  * Shows the label near the mouse.
  * @param {object} e Event payload.
  */
-st.popup.QuestionView.prototype.numberOver = function(e) {
+st.popup.QuestionView.prototype.numberOver = function (e) {
   var tooltip = document.getElementById('kd-tooltip');
   tooltip.classList.add('visible');
   // Position the tooltip accordingly.
@@ -180,7 +180,7 @@ st.popup.QuestionView.prototype.numberOver = function(e) {
  * Handler for when the number is hovered out of.
  * Hides the label.
  */
-st.popup.QuestionView.prototype.numberOut = function() {
+st.popup.QuestionView.prototype.numberOut = function () {
   var tooltip = document.getElementById('kd-tooltip');
   tooltip.classList.remove('visible');
 };
@@ -188,7 +188,7 @@ st.popup.QuestionView.prototype.numberOut = function() {
 /**
  * Handler for when the mark unread button is clicked.
  */
-st.popup.QuestionView.prototype.markUnread = function() {
+st.popup.QuestionView.prototype.markUnread = function () {
   this.question.setState(st.State.NORMAL);
   this.parentView.render();
 };
@@ -196,7 +196,7 @@ st.popup.QuestionView.prototype.markUnread = function() {
 /**
  * Handler for when the mark read button is clicked.
  */
-st.popup.QuestionView.prototype.markRead = function() {
+st.popup.QuestionView.prototype.markRead = function () {
   this.question.setState(st.State.READ);
   this.parentView.render();
 };
@@ -207,22 +207,22 @@ st.popup.QuestionView.prototype.markRead = function() {
  * @param {object} date Date object.
  * @return {string} Formatted time.
  */
-st.popup.QuestionView.prototype.formatDate_ = function(date) {
+st.popup.QuestionView.prototype.formatDate_ = function (date) {
   var diff = ((new Date()).getTime() - date.getTime()) / 1000;
   var dayDiff = Math.floor(diff / 86400);
   if (isNaN(dayDiff) || dayDiff < 0) {
     return;
   }
   return dayDiff === 0 && (
-      diff < 60 && 'just now' ||
-      diff < 120 && '1 minute ago' ||
-      diff < 3600 && Math.floor(diff / 60) + ' minutes ago' ||
-      diff < 7200 && '1 hour ago' ||
-      diff < 86400 && Math.floor(diff / 3600) + ' hours ago') ||
-      dayDiff == 1 && 'yesterday' ||
-      dayDiff < 7 && dayDiff + ' days ago' ||
-      dayDiff < 31 && Math.ceil(dayDiff / 7) + ' weeks ago' ||
-      'over a month ago';
+    diff < 60 && 'just now' ||
+    diff < 120 && '1 minute ago' ||
+    diff < 3600 && Math.floor(diff / 60) + ' minutes ago' ||
+    diff < 7200 && '1 hour ago' ||
+    diff < 86400 && Math.floor(diff / 3600) + ' hours ago') ||
+    dayDiff == 1 && 'yesterday' ||
+    dayDiff < 7 && dayDiff + ' days ago' ||
+    dayDiff < 31 && Math.ceil(dayDiff / 7) + ' weeks ago' ||
+    'over a month ago';
 };
 
 /**
@@ -231,7 +231,7 @@ st.popup.QuestionView.prototype.formatDate_ = function(date) {
  * @param {string} html Markup string.
  * @return {object} Newly created DOM element.
  */
-st.popup.QuestionView.prototype.makeElement_ = function(html) {
+st.popup.QuestionView.prototype.makeElement_ = function (html) {
   var div = document.createElement('div');
   div.innerHTML = html;
   return div.childNodes[0];
@@ -244,7 +244,7 @@ st.popup.QuestionView.prototype.makeElement_ = function(html) {
  * @param {object} data The data to populate with.
  * @return {string} Resulting string.
  */
-st.popup.QuestionView.prototype.renderTemplate_ = function(template, data) {
+st.popup.QuestionView.prototype.renderTemplate_ = function (template, data) {
   var out = template;
   for (var key in data) {
     var value = data[key];
@@ -263,5 +263,5 @@ st.popup.QuestionView.prototype.renderTemplate_ = function(template, data) {
  * @return {string} markup for the given tag.
  */
 st.popup.QuestionView.prototype.formatTag_ = function(tag) {
-  return '[' + tag.network + ':' + tag.name + ']';
+  return tag.name;
 };

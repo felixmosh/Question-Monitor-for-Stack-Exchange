@@ -15,27 +15,31 @@ body { width: 500px; overflow: hidden; }
 
 ul { padding: 0; list-style-type: none; }
 
-#questions { padding-bottom: 10px; }
 
 .question { padding: 8px 0; border-bottom: 1px #E5E5E5 solid; overflow: hidden; cursor: pointer; }
-.question .more { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.question .name { font-weight: bold; white-space: nowrap; font-color: black; overflow: hidden; text-overflow: ellipsis; }
-.question .tags { float: left; }
+.question .more { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgba(0,0,0,.4) }
+.question .name { font-weight: bold; white-space: nowrap; color: black; overflow: hidden; text-overflow: ellipsis; margin-bottom:  5px }
+.question .tags { float: left; color: #39739d; background-color: #E1ECF4; border-radius: 3px; padding: 1px 8px; margin-right: 8px;}
+.question .owner_reputation, .question .owner_display_name { color: rgba(0,0,0,.7) }
 .question.read { background: #F5F5F5; }
 .question.read .name { font-weight: normal; }
 
-#mark-as-read { float: right; margin: 8px 14px 4px 0; }
+#mark-as-read { float: right; margin: 8px 14px 8px 0; }
 
 .hidden {
   display: none;
 }
 
-.numbers { float: left; width: 36px; text-align: right; font-size: 22px; padding: 10px 10px 0 0; cursor: default; }
+.numbers { float: left; width: 36px; text-align: center; font-size: 22px; padding: 0 10px 0 0; cursor: default; }
 .up_vote_count, .view_count, .answer_count { display: none; }
 .numbers > .visible { position: relative; display: block; }
+.answer_count {
+  margin-top: 8px;
+  color: #45A163;
+}
 
 /* Show mark read/unread checkbox when hovering */
-.question .buttons { display: none; float: right; margin: 7px 3px 5px 0; }
+.question .buttons { display: none; float: right; margin: 12px 3px 5px 0; }
 .question:hover .buttons { display: block; }
 
 /* Show only read button if the post is read */
