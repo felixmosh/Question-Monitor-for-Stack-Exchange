@@ -20,7 +20,7 @@ st.popup = st.popup || {};
  * @constructor
  * Top level view in the popup.
  */
-st.popup.PopupView = function() {
+st.popup.PopupView = function () {
   this.questionList = questionList;
   this.questionListView = new st.popup.QuestionListView(questionList);
 
@@ -36,24 +36,22 @@ st.popup.PopupView = function() {
   var ctx = this;
   for (var id in this.handlers) {
     // Closure for this loop.
-    (function(handler) {
-      document.getElementById(id).addEventListener('click', function(e) {
+    (function (handler) {
+      document.getElementById(id).addEventListener('click', function (e) {
         handler.call(ctx);
       });
     })(this.handlers[id]);
   }
 
   /* Keyevent for prev & next page navigation */
-  document.addEventListener('keyup',function(e){
-    if(e.keyCode === 37){ // left
+  document.addEventListener('keyup', function (e) {
+    if (e.keyCode === 37) { // left
       ctx.handlers.prev.call(ctx);
     }
-    if(e.keyCode === 39){ // right
-      ctx.handlers.next.call(ctx);
-    }
-    if(e.shiftKey && e.keyCode === 39){ // right
+    if (e.shiftKey && e.keyCode === 39) { // right
       ctx.handlers['mark-as-read'].call(ctx);
       ctx.handlers.archive.call(ctx);
+    } else if (e.keyCode === 39) { // right
       ctx.handlers.next.call(ctx);
     }
   });
@@ -62,7 +60,7 @@ st.popup.PopupView = function() {
 /**
  * Renders the popup view.
  */
-st.popup.PopupView.prototype.render = function() {
+st.popup.PopupView.prototype.render = function () {
   this.questionListView.render();
   document.getElementById('mark-as-read').classList.toggle('hidden');
 };
@@ -70,7 +68,7 @@ st.popup.PopupView.prototype.render = function() {
 /**
  * Archive all of the questions marked as read.
  */
-st.popup.PopupView.prototype.archiveRead = function() {
+st.popup.PopupView.prototype.archiveRead = function () {
   var count = this.questionList.getQuestionCount(st.State.READ);
   this.questionList.archiveRead();
   var newCount = this.questionList.getQuestionCount(st.State.READ);
@@ -87,7 +85,7 @@ st.popup.PopupView.prototype.archiveRead = function() {
 /**
  * Mark all of the questions on this page as read.
  */
-st.popup.PopupView.prototype.refresh = function() {
+st.popup.PopupView.prototype.refresh = function () {
   this.questionList.update();
   this.notify_('Fetched latest questions from Stack Exchange.');
 };
@@ -95,7 +93,7 @@ st.popup.PopupView.prototype.refresh = function() {
 /**
  * Go to the previous page.
  */
-st.popup.PopupView.prototype.goPrev = function() {
+st.popup.PopupView.prototype.goPrev = function () {
   this.questionListView.prev();
   this.questionListView.render();
 };
@@ -104,7 +102,7 @@ st.popup.PopupView.prototype.goPrev = function() {
 /**
  * Go to the next page.
  */
-st.popup.PopupView.prototype.goNext = function() {
+st.popup.PopupView.prototype.goNext = function () {
   this.questionListView.next();
   this.questionListView.render();
 };
@@ -112,11 +110,11 @@ st.popup.PopupView.prototype.goNext = function() {
 /**
  * Load the options page.
  */
-st.popup.PopupView.prototype.openOptions = function() {
+st.popup.PopupView.prototype.openOptions = function () {
   window.open('options.html');
 };
 
-st.popup.PopupView.prototype.markAsRead = function() {
+st.popup.PopupView.prototype.markAsRead = function () {
   const questions = this.questionListView.getQuestionsOnPage();
   this.questionList.markRead(questions);
   this.questionListView.render();
@@ -127,11 +125,11 @@ st.popup.PopupView.prototype.markAsRead = function() {
  * Show a temporary butterbar.
  * @param {string} message The message to display.
  */
-st.popup.PopupView.prototype.notify_ = function(message) {
+st.popup.PopupView.prototype.notify_ = function (message) {
   var butterBar = document.querySelector('#butterbar');
   butterBar.querySelector('p').innerText = message;
   butterBar.classList.add('shown');
-  setTimeout(function() {
+  setTimeout(function () {
     butterBar.classList.remove('shown');
   }, 2000);
 };
