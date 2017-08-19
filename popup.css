@@ -24,7 +24,11 @@ ul { padding: 0; list-style-type: none; }
 .question.read { background: #F5F5F5; }
 .question.read .name { font-weight: normal; }
 
-#page-read { float: right; margin: 8px 14px 4px 0; }
+#mark-as-read { float: right; margin: 8px 14px 4px 0; }
+
+.hidden {
+  display: none;
+}
 
 .numbers { float: left; width: 36px; text-align: right; font-size: 22px; padding: 10px 10px 0 0; cursor: default; }
 .up_vote_count, .view_count, .answer_count { display: none; }

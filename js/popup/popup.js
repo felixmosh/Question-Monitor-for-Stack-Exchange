@@ -30,7 +30,8 @@ st.popup.PopupView = function() {
     refresh: this.refresh,
     next: this.goNext,
     prev: this.goPrev,
-    options: this.openOptions
+    options: this.openOptions,
+    'mark-as-read': this.markAsRead
   };
   var ctx = this;
   for (var id in this.handlers) {
@@ -50,6 +51,11 @@ st.popup.PopupView = function() {
     if(e.keyCode === 39){ // right
       ctx.handlers.next.call(ctx);
     }
+    if(e.shiftKey && e.keyCode === 39){ // right
+      ctx.handlers['mark-as-read'].call(ctx);
+      ctx.handlers.archive.call(ctx);
+      ctx.handlers.next.call(ctx);
+    }
   });
 };
 
@@ -58,6 +64,7 @@ st.popup.PopupView = function() {
  */
 st.popup.PopupView.prototype.render = function() {
   this.questionListView.render();
+  document.getElementById('mark-as-read').classList.toggle('hidden');
 };
 
 /**
@@ -107,6 +114,12 @@ st.popup.PopupView.prototype.goNext = function() {
  */
 st.popup.PopupView.prototype.openOptions = function() {
   window.open('options.html');
+};
+
+st.popup.PopupView.prototype.markAsRead = function() {
+  const questions = this.questionListView.getQuestionsOnPage();
+  this.questionList.markRead(questions);
+  this.questionListView.render();
 };
 
 /**

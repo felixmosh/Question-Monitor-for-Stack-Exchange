@@ -44,19 +44,6 @@ st.popup.QuestionListView.prototype.render = function() {
   $qs.innerHTML = '';
   $qs.appendChild($ul);
 
-  if (questions.length > 1) {
-    // Add a "mark read" button to the end of the questions list
-    var $read = document.createElement('div');
-    $read.innerHTML = '<a id="page-read" class="kd-button" ' +
-      'style="-webkit-user-select: none;">Mark page read</a>';
-    var ctx = this;
-    $read.querySelector('a').addEventListener('click', function() {
-      ctx.questionList.markRead(questions);
-      ctx.render();
-    });
-    $qs.appendChild($read);
-  }
-
   this.renderPaginator_();
 };
 
