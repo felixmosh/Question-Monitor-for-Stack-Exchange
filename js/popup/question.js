@@ -80,19 +80,19 @@ st.popup.QuestionView.prototype.render = function () {
   data.ownerReputation = data.owner.reputation;
   data.className = this.question.state === st.State.READ && 'read' || '';
   data.tags = (this.parentView.shouldShowTags() ?
-    this.formatTag_(this.question.mainTag, this.question.tags) : '');
+    this.formatTag_(this.question.mainTag) : '');
 
-  var html = this.renderTemplate_(st.popup.QUESTION_TEMPLATE, data);
-  var el = this.makeElement_(html);
+  const html = this.renderTemplate_(st.popup.QUESTION_TEMPLATE, data);
+  const el = this.makeElement_(html);
 
-  var ctx = this;
+  const ctx = this;
   // Setup the click handler for the question.
   el.addEventListener('click', (e) => {
     ctx.click();
   });
 
   // Setup the event handlers for the number on the left part of the question.
-  var number = el.querySelector('.numbers');
+  const number = el.querySelector('.numbers');
   number.addEventListener('click', function (e) {
     e.stopPropagation();
     ctx.numberClick();
@@ -123,7 +123,6 @@ st.popup.QuestionView.prototype.render = function () {
  * Opens the question on SO and marks the question as read.
  */
 st.popup.QuestionView.prototype.click = function () {
-  var id = this.question.questionId;
   // Mark the question as read.
   this.question.setState(st.State.READ);
   // Open the question in a new tab.
@@ -139,20 +138,20 @@ st.popup.QuestionView.prototype.click = function () {
  */
 st.popup.QuestionView.prototype.numberClick = function (e) {
   this.countType = (this.countType + 1) % st.popup.COUNT_TYPES.length;
-  var id = st.popup.COUNT_TYPES[this.countType];
-  var label = st.popup.COUNT_LABELS[id];
+  const id = st.popup.COUNT_TYPES[this.countType];
+  const label = st.popup.COUNT_LABELS[id];
   // Update the visible number.
-  var nodes = this.el.querySelector('.numbers').childNodes;
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
-    if (i == this.countType) {
+  const nodes = this.el.querySelector('.numbers').childNodes;
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    if (i === this.countType) {
       node.classList.add('visible');
     } else {
       node.classList.remove('visible');
     }
   }
   // Update the tooltip label.
-  var tooltip = document.querySelector('#tooltip-text');
+  const tooltip = document.querySelector('#tooltip-text');
   tooltip.innerText = label;
 };
 
@@ -162,16 +161,16 @@ st.popup.QuestionView.prototype.numberClick = function (e) {
  * @param {object} e Event payload.
  */
 st.popup.QuestionView.prototype.numberOver = function (e) {
-  var tooltip = document.getElementById('kd-tooltip');
+  const tooltip = document.getElementById('kd-tooltip');
   tooltip.classList.add('visible');
   // Position the tooltip accordingly.
   tooltip.style.left = '20px';
   // Don't let it flow over the page bounds.
   tooltip.style.top = Math.min((e.clientY + 15), document.height - 30) + 'px';
   // Update the tooltip label.
-  var id = st.popup.COUNT_TYPES[this.countType];
-  var label = st.popup.COUNT_LABELS[id];
-  var tooltipText = document.querySelector('#tooltip-text');
+  const id = st.popup.COUNT_TYPES[this.countType];
+  const label = st.popup.COUNT_LABELS[id];
+  const tooltipText = document.querySelector('#tooltip-text');
   tooltipText.innerText = label;
 };
 
@@ -180,7 +179,7 @@ st.popup.QuestionView.prototype.numberOver = function (e) {
  * Hides the label.
  */
 st.popup.QuestionView.prototype.numberOut = function () {
-  var tooltip = document.getElementById('kd-tooltip');
+  const tooltip = document.getElementById('kd-tooltip');
   tooltip.classList.remove('visible');
 };
 
@@ -207,8 +206,8 @@ st.popup.QuestionView.prototype.markRead = function () {
  * @return {string} Formatted time.
  */
 st.popup.QuestionView.prototype.formatDate_ = function (date) {
-  var diff = ((new Date()).getTime() - date.getTime()) / 1000;
-  var dayDiff = Math.floor(diff / 86400);
+  const diff = ((new Date()).getTime() - date.getTime()) / 1000;
+  const dayDiff = Math.floor(diff / 86400);
   if (isNaN(dayDiff) || dayDiff < 0) {
     return;
   }
@@ -218,7 +217,7 @@ st.popup.QuestionView.prototype.formatDate_ = function (date) {
     diff < 3600 && Math.floor(diff / 60) + ' minutes ago' ||
     diff < 7200 && '1 hour ago' ||
     diff < 86400 && Math.floor(diff / 3600) + ' hours ago') ||
-    dayDiff == 1 && 'yesterday' ||
+    dayDiff === 1 && 'yesterday' ||
     dayDiff < 7 && dayDiff + ' days ago' ||
     dayDiff < 31 && Math.ceil(dayDiff / 7) + ' weeks ago' ||
     'over a month ago';
@@ -231,7 +230,7 @@ st.popup.QuestionView.prototype.formatDate_ = function (date) {
  * @return {object} Newly created DOM element.
  */
 st.popup.QuestionView.prototype.makeElement_ = function (html) {
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.innerHTML = html;
   return div.childNodes[0];
 };
@@ -244,11 +243,11 @@ st.popup.QuestionView.prototype.makeElement_ = function (html) {
  * @return {string} Resulting string.
  */
 st.popup.QuestionView.prototype.renderTemplate_ = function (template, data) {
-  var out = template;
-  for (var key in data) {
-    var value = data[key];
+  let out = template;
+  for (let key in data) {
+    let value = data[key];
     // Strip the markup from the key (if present).
-    var tmp = document.createElement('div');
+    const tmp = document.createElement('div');
     tmp.innerHTML = value;
     value = tmp.textContent;
     out = out.replace('{{' + key + '}}', value);
