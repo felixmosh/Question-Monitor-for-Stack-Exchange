@@ -35,24 +35,22 @@ st.popup.PopupView = function () {
     archiveWithAnswers: this.archiveWithAnswers
   };
 
-  const ctx = this;
-
   Object.keys(this.handlers).forEach((id) => {
     document.getElementById(id).addEventListener('click', () => {
-      ctx.handlers[id].call(ctx);
+      this.handlers[id].call(this);
     });
   });
 
   /* Keyevent for prev & next page navigation */
   document.addEventListener('keyup', (e) => {
     if (e.keyCode === 37) { // left
-      ctx.handlers.prev.call(ctx);
+      this.handlers.prev.call(this);
     }
     if (e.shiftKey && e.keyCode === 39) { // right
-      ctx.handlers.markAsRead.call(ctx);
-      ctx.handlers.archive.call(ctx);
+      this.handlers.markAsRead.call(this);
+      this.handlers.archive.call(this);
     } else if (e.keyCode === 39) { // right
-      ctx.handlers.next.call(ctx);
+      this.handlers.next.call(this);
     }
   });
 };

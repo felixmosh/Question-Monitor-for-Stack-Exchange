@@ -66,11 +66,11 @@ st.popup.QuestionView = function (question, parentView) {
  * @return {object} DOMElement.
  */
 st.popup.QuestionView.prototype.render = function () {
-  var data = {};
-  for (var key in this.question) {
-    var value = this.question[key];
-    if (typeof value != 'function') {
-      data[key] = value;
+  const data = {};
+  for (let key in this.question) {
+    let property = this.question[key];
+    if (typeof property !== 'function') {
+      data[key] = property;
     }
   }
   data.creationDate = this.formatDate_(new Date(data.creationDate * 1000));
@@ -87,7 +87,7 @@ st.popup.QuestionView.prototype.render = function () {
 
   var ctx = this;
   // Setup the click handler for the question.
-  el.addEventListener('click', function (e) {
+  el.addEventListener('click', (e) {
     ctx.click();
   });
 

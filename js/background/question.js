@@ -109,7 +109,7 @@ st.Question.prototype.getURL = function() {
  * @param {number} state The new state.
  */
 st.Question.prototype.setState = function(state) {
-  if (state != this.state) {
+  if (state !== this.state) {
     this.state = state;
     // Callback since count may have changed.
     if (this.collection.countCallback) {

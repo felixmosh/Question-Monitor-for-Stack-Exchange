@@ -31,16 +31,15 @@ st.popup.QuestionListView = function(questionList) {
  * Renders the contents of the list.
  */
 st.popup.QuestionListView.prototype.render = function() {
-  var questions = this.getQuestionsOnPage();
+  const questions = this.getQuestionsOnPage();
 
-  var $ul = document.createElement('ul');
-  for (var i = 0; i < questions.length; i++) {
-    var question = questions[i];
-    var qview = new st.popup.QuestionView(question, this);
+  const $ul = document.createElement('ul');
+  questions.forEach((question) => {
+    const qview = new st.popup.QuestionView(question, this);
     $ul.appendChild(qview.render());
-  }
+  });
   // Add the list to the questions div.
-  var $qs = document.querySelector('#questions');
+  const $qs = document.querySelector('#questions');
   $qs.innerHTML = '';
   $qs.appendChild($ul);
 

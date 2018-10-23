@@ -183,10 +183,10 @@ st.QuestionList.prototype.getQuestions = function (opt_sort, opt_limit, opt_offs
 st.QuestionList.prototype.update = function (opt_quantity) {
   const quantity = opt_quantity !== undefined ? opt_quantity :
     st.INITIAL_QUANTITY;
-  const ctx = this;
+
   // Iterate for each tag we watch.
   this.tags.forEach(tag => {
-    ctx.fetchTagQuestions_(tag, quantity)
+    this.fetchTagQuestions_(tag, quantity)
   });
 };
 
@@ -204,9 +204,8 @@ st.QuestionList.prototype.fetchTagQuestions_ = function (tag, quantity) {
     .replace('{{pagesize}}', quantity)
     .replace('{{key}}', st.API_KEY);
 
-  const ctx = this;
   this.makeJSONPRequest_(url, (data) => {
-    ctx.parseResults_.call(ctx, data, tag);
+    this.parseResults_(data, tag);
   });
 };
 
@@ -271,9 +270,8 @@ st.QuestionList.prototype.scheduleUpdates = function (opt_period, opt_quantity) 
   const period = opt_period !== undefined ? opt_period : st.UPDATE_INTERVAL;
   const quantity = opt_quantity !== undefined ? opt_quantity : st.UPDATE_QUANTITY;
 
-  const ctx = this;
   this.timer = setInterval(() => {
-    ctx.update.call(ctx, quantity);
+    this.update(quantity);
   }, period);
 };
 
