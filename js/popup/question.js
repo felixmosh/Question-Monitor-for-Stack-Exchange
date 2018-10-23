@@ -87,7 +87,7 @@ st.popup.QuestionView.prototype.render = function () {
 
   var ctx = this;
   // Setup the click handler for the question.
-  el.addEventListener('click', (e) {
+  el.addEventListener('click', (e) => {
     ctx.click();
   });
 
