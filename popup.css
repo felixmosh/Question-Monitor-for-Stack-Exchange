@@ -1,10 +1,25 @@
-body { width: 500px; overflow: hidden; }
+body {
+  width: 500px;
+  overflow: hidden;
+}
+
 /**
  * Kennedy overrides.
  */
-.kd-appname { margin-left: 14px !important; width: 100px !important; color: green !important;}
-.kd-button { min-width: 35px !important; }
-.kd-buttonbar.right { margin-right: 14px !important; }
+.kd-appname {
+  margin-left: 14px !important;
+  width: 100px !important;
+  color: green !important;
+}
+
+.kd-button {
+  min-width: 35px !important;
+}
+
+.kd-buttonbar.right {
+  margin-right: 14px !important;
+}
+
 .kd-select .kd-disclosureindicator {
   background: important url('disclosure_arrow_dk_grey_up_down.png');
 }
@@ -13,41 +28,117 @@ body { width: 500px; overflow: hidden; }
  * The list itself.
  */
 
-ul { padding: 0; list-style-type: none; }
+ul {
+  padding: 0;
+  list-style-type: none;
+}
 
+.question {
+  padding: 8px 0;
+  border-bottom: 1px #E5E5E5 solid;
+  overflow: hidden;
+  cursor: pointer;
+}
 
-.question { padding: 8px 0; border-bottom: 1px #E5E5E5 solid; overflow: hidden; cursor: pointer; }
-.question .more { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgba(0,0,0,.4) }
-.question .name { font-weight: bold; white-space: nowrap; color: black; overflow: hidden; text-overflow: ellipsis; margin-bottom:  5px }
-.question .tags { float: left; color: #39739d; background-color: #E1ECF4; border-radius: 3px; padding: 1px 8px; margin-right: 8px;}
-.question .owner_reputation, .question .owner_display_name { color: rgba(0,0,0,.7) }
-.question.read { background: #F5F5F5; }
-.question.read .name { font-weight: normal; }
+.question .more {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, .4)
+}
 
-#mark-as-read { float: right; margin: 8px 14px 8px 0; }
+.question .name {
+  font-weight: bold;
+  white-space: nowrap;
+  color: black;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px
+}
+
+.question .tags {
+  float: left;
+  color: #39739d;
+  background-color: #E1ECF4;
+  border-radius: 3px;
+  padding: 1px 8px;
+  margin-right: 8px;
+}
+
+.question .owner_reputation, .question .owner_display_name {
+  color: rgba(0, 0, 0, .7)
+}
+
+.question.read {
+  background: #F5F5F5;
+}
+
+.question.read .name {
+  font-weight: normal;
+}
+
+footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
 
 .hidden {
+  display: none !important;
+}
+
+.numbers {
+  float: left;
+  width: 36px;
+  text-align: center;
+  font-size: 22px;
+  padding: 0 10px 0 0;
+  cursor: default;
+}
+
+.view_count, .answer_count {
   display: none;
 }
 
-.numbers { float: left; width: 36px; text-align: center; font-size: 22px; padding: 0 10px 0 0; cursor: default; }
-.up_vote_count, .view_count, .answer_count { display: none; }
-.numbers > .visible { position: relative; display: block; }
-.view_count {
-  color: rgba(0,0,0,.4);
+.numbers > .visible {
+  position: relative;
+  display: block;
 }
+
+.view_count {
+  color: rgba(0, 0, 0, .4);
+}
+
 .answer_count {
   margin-top: 8px;
   color: #45A163;
 }
 
 /* Show mark read/unread checkbox when hovering */
-.question .buttons { display: none; float: right; margin: 12px 3px 5px 0; }
-.question:hover .buttons { display: block; }
+.question .buttons {
+  display: none;
+  float: right;
+  margin: 12px 3px 5px 0;
+}
+
+.question:hover .buttons {
+  display: block;
+}
 
 /* Show only read button if the post is read */
-.question .buttons .mark-read { display: block; }
-.question .buttons .mark-unread { display: none; }
+.question .buttons .mark-read {
+  display: block;
+}
 
-.question.read .buttons .mark-read { display: none !important; }
-.question.read .buttons .mark-unread { display: block !important; }
+.question .buttons .mark-unread {
+  display: none;
+}
+
+.question.read .buttons .mark-read {
+  display: none !important;
+}
+
+.question.read .buttons .mark-unread {
+  display: block !important;
+}

@@ -18,7 +18,6 @@ st.popup.QUESTION_TEMPLATE =
   '<li class="question {{className}}" data-question-id="{{questionId}}">' +
   '<div class="numbers">' +
   '<span class="view_count visible">{{viewCount}}</span>' +
-  '<span class="up_vote_count">{{upVoteCount}}</span>' +
   '<span class="answer_count visible">{{answerCount}}</span>' +
   '</div>' +
   '<div class="buttons">' +

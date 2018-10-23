@@ -7,9 +7,9 @@
  */
 
 // Get background page.
-var background = chrome.extension.getBackgroundPage();
-var st = background.st;
-var questionList = background.questionList;
+const background = chrome.extension.getBackgroundPage();
+const st = background.st;
+const questionList = background.questionList;
 
 /**
  * Establish the popup namespace.
@@ -31,25 +31,25 @@ st.popup.PopupView = function () {
     next: this.goNext,
     prev: this.goPrev,
     options: this.openOptions,
-    'mark-as-read': this.markAsRead
+    markAsRead: this.markAsRead,
+    archiveWithAnswers: this.archiveWithAnswers
   };
-  var ctx = this;
-  for (var id in this.handlers) {
-    // Closure for this loop.
-    (function (handler) {
-      document.getElementById(id).addEventListener('click', function (e) {
-        handler.call(ctx);
-      });
-    })(this.handlers[id]);
-  }
+
+  const ctx = this;
+
+  Object.keys(this.handlers).forEach((id) => {
+    document.getElementById(id).addEventListener('click', () => {
+      ctx.handlers[id].call(ctx);
+    });
+  });
 
   /* Keyevent for prev & next page navigation */
-  document.addEventListener('keyup', function (e) {
+  document.addEventListener('keyup', (e) => {
     if (e.keyCode === 37) { // left
       ctx.handlers.prev.call(ctx);
     }
     if (e.shiftKey && e.keyCode === 39) { // right
-      ctx.handlers['mark-as-read'].call(ctx);
+      ctx.handlers.markAsRead.call(ctx);
       ctx.handlers.archive.call(ctx);
     } else if (e.keyCode === 39) { // right
       ctx.handlers.next.call(ctx);
@@ -62,21 +62,22 @@ st.popup.PopupView = function () {
  */
 st.popup.PopupView.prototype.render = function () {
   this.questionListView.render();
-  document.getElementById('mark-as-read').classList.toggle('hidden');
+  document.getElementById('markAsRead').classList.toggle('hidden');
+  document.getElementById('archiveWithAnswers').classList.toggle('hidden');
 };
 
 /**
  * Archive all of the questions marked as read.
  */
 st.popup.PopupView.prototype.archiveRead = function () {
-  var count = this.questionList.getQuestionCount(st.State.READ);
+  const count = this.questionList.getQuestionCount(st.State.READ);
   this.questionList.archiveRead();
-  var newCount = this.questionList.getQuestionCount(st.State.READ);
+  const newCount = this.questionList.getQuestionCount(st.State.READ);
   this.questionListView.setPage(0);
   this.questionListView.render();
-  var diff = count - newCount;
+  const diff = count - newCount;
   if (diff) {
-    this.notify_('Archived ' + diff + ' read questions.');
+    this.notify_(`Archived ${diff} read questions.`);
   } else {
     this.notify_('No read questions to archive.');
   }
@@ -120,16 +121,21 @@ st.popup.PopupView.prototype.markAsRead = function () {
   this.questionListView.render();
 };
 
+st.popup.PopupView.prototype.archiveWithAnswers = function () {
+  this.questionList.archiveWithAnswers();
+  this.questionListView.render();
+};
+
 /**
  * @private
  * Show a temporary butterbar.
  * @param {string} message The message to display.
  */
 st.popup.PopupView.prototype.notify_ = function (message) {
-  var butterBar = document.querySelector('#butterbar');
+  const butterBar = document.querySelector('#butterbar');
   butterBar.querySelector('p').innerText = message;
   butterBar.classList.add('shown');
-  setTimeout(function () {
+  setTimeout(() => {
     butterBar.classList.remove('shown');
   }, 2000);
 };

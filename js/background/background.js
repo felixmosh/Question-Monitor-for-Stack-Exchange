@@ -11,8 +11,8 @@ if (!tags.length) {
   chrome.tabs.create({url: 'options.html'});
 }
 questionList.setTags(tags);
-questionList.registerCountCallback(function() {
-  var count = questionList.getQuestionCount();
+questionList.registerCountCallback(() => {
+  const count = questionList.getQuestionCount();
   chrome.browserAction.setBadgeText({
     text: (count > 0 ? count.toString() : '')
   });

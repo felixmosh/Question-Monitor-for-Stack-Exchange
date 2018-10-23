@@ -35,12 +35,6 @@ st.Question = function(params, collection) {
   this.lastActivityDate = params.last_activity_date;
 
   /**
-   * Number of up votes.
-   * @type {number}
-   */
-  this.upVoteCount = params.up_vote_count;
-
-  /**
    * Number of views.
    * @type {number}
    */

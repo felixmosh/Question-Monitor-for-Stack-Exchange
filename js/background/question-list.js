@@ -20,8 +20,8 @@ st.API_KEY = 'dHa9ci5uMP1DpelMw*c**Q((';
  * @type {string}
  */
 st.UNANSWERED_URL = 'https://api.stackexchange.com/2.2/questions/' +
-    'unanswered/?site={{root}}&tagged={{tagged}}&pagesize={{pagesize}}' +
-    '&jsonp=st.callbacks.{{callback}}&key={{key}}';
+  'unanswered/?site={{root}}&tagged={{tagged}}&pagesize={{pagesize}}' +
+  '&jsonp=st.callbacks.{{callback}}&key={{key}}';
 
 /**
  * Default number of questions to get initially.
@@ -51,7 +51,7 @@ st.UPDATE_INTERVAL = 60 * 1000; // every minute
 st.State = {
   NORMAL: 1,
   READ: 2,
-  ARCHIVED: 3
+  ARCHIVED: 3,
 };
 
 
@@ -64,16 +64,16 @@ st.State = {
 st.NETWORK_INFO = {
   'stackoverflow': {
     name: 'Stack Overflow',
-    root: 'stackoverflow.com'
+    root: 'stackoverflow.com',
   },
   'ux': {
     name: 'User Experience',
-    root: 'ux.stackexchange.com'
+    root: 'ux.stackexchange.com',
   },
   'gamedev': {
     name: 'Game Development',
-    root: 'gamedev.stackexchange.com'
-  }
+    root: 'gamedev.stackexchange.com',
+  },
 };
 
 
@@ -84,12 +84,11 @@ st.NETWORK_INFO = {
 st.callbacks = {};
 
 
-
 /**
  * Provides a container for stack exchange questions.
  * @constructor
  */
-st.QuestionList = function() {
+st.QuestionList = function () {
   /**
    * Container for all of the questions known to ths list.
    * @type {!Object}
@@ -109,7 +108,7 @@ st.QuestionList = function() {
    * @private
    */
   this.questionState_ = localStorage.getItem('questionState') ?
-      JSON.parse(localStorage.getItem('questionState')) : {};
+    JSON.parse(localStorage.getItem('questionState')) : {};
 
   /**
    * Counter for JSONP callbacks.
@@ -124,8 +123,8 @@ st.QuestionList = function() {
  * Sets which tags to monitor.
  * @param {!Array.<!st.Tag>} tags Array of Tags to monitor.
  */
-st.QuestionList.prototype.setTags = function(tags) {
-  this.tags = tags.map(function(tagData) {
+st.QuestionList.prototype.setTags = function (tags) {
+  this.tags = tags.map((tagData) => {
     return new st.Tag(tagData);
   });
 };
@@ -134,7 +133,7 @@ st.QuestionList.prototype.setTags = function(tags) {
 /**
  * Resets the questions and question state.
  */
-st.QuestionList.prototype.reset = function() {
+st.QuestionList.prototype.reset = function () {
   this.questions_ = {};
   this.questionState_ = {};
 };
@@ -147,29 +146,28 @@ st.QuestionList.prototype.reset = function() {
  * @param {number=} opt_offset Index to start at.
  * @return {!Array.<!st.Question>} Array of questions.
  */
-st.QuestionList.prototype.getQuestions =
-    function(opt_sort, opt_limit, opt_offset) {
-  var out = [];
-  for (var id in this.questions_) {
-    var q = this.questions_[id];
+st.QuestionList.prototype.getQuestions = function (opt_sort, opt_limit, opt_offset) {
+  let out = [];
+  for (const id in this.questions_) {
+    const q = this.questions_[id];
     // Only add unarchived questions.
-    if (q.state != st.State.ARCHIVED) {
+    if (q.state !== st.State.ARCHIVED) {
       out.push(q);
     }
   }
-  if (opt_sort != undefined) {
-    var sort = opt_sort;
+  if (opt_sort !== undefined) {
+    let sort = opt_sort;
     // Sort the questions by criteria. -criteria means reversed.
-    var mul = sort[0] == '-' ? -1 : 1;
-    sort = sort[0] == '-' ? sort.substring(1) : sort;
-    out = out.sort(function(a, b) {
+    const mul = sort[0] === '-' ? -1 : 1;
+    sort = sort[0] === '-' ? sort.substring(1) : sort;
+    out = out.sort((a, b) => {
       return mul * (b[sort] - a[sort]);
     });
   }
-  if (opt_offset != undefined) {
+  if (opt_offset !== undefined) {
     out = out.slice(opt_offset, out.length);
   }
-  if (opt_limit != undefined) {
+  if (opt_limit !== undefined) {
     // Limit the response.
     out = out.slice(0, opt_limit);
   }
@@ -182,14 +180,14 @@ st.QuestionList.prototype.getQuestions =
  * added.
  * @param {number=} opt_quantity How many questions to load.
  */
-st.QuestionList.prototype.update = function(opt_quantity) {
-  var quantity = opt_quantity != undefined ? opt_quantity :
-      st.INITIAL_QUANTITY;
-  var ctx = this;
+st.QuestionList.prototype.update = function (opt_quantity) {
+  const quantity = opt_quantity !== undefined ? opt_quantity :
+    st.INITIAL_QUANTITY;
+  const ctx = this;
   // Iterate for each tag we watch.
-  for (var i = 0; i < this.tags.length; i++) {
-    ctx.fetchTagQuestions_(this.tags[i], quantity);
-  }
+  this.tags.forEach(tag => {
+    ctx.fetchTagQuestions_(tag, quantity)
+  });
 };
 
 
@@ -199,14 +197,15 @@ st.QuestionList.prototype.update = function(opt_quantity) {
  * @param {number} quantity The number of items to fetch.
  * @private
  */
-st.QuestionList.prototype.fetchTagQuestions_ = function(tag, quantity) {
-  var url = st.UNANSWERED_URL.
-      replace('{{root}}', tag.getNetwork().root).
-      replace('{{tagged}}', tag.name).
-      replace('{{pagesize}}', quantity).
-      replace('{{key}}', st.API_KEY);
-  var ctx = this;
-  this.makeJSONPRequest_(url, function(data) {
+st.QuestionList.prototype.fetchTagQuestions_ = function (tag, quantity) {
+  const url = st.UNANSWERED_URL
+    .replace('{{root}}', tag.getNetwork().root)
+    .replace('{{tagged}}', tag.name)
+    .replace('{{pagesize}}', quantity)
+    .replace('{{key}}', st.API_KEY);
+
+  const ctx = this;
+  this.makeJSONPRequest_(url, (data) => {
     ctx.parseResults_.call(ctx, data, tag);
   });
 };
@@ -219,13 +218,13 @@ st.QuestionList.prototype.fetchTagQuestions_ = function(tag, quantity) {
  * @param {!st.Tag} tag The tag for which the response came.
  * @private
  */
-st.QuestionList.prototype.parseResults_ = function(data, tag) {
-  var didCountChange = false;
-  for (var i = 0; i < data.items.length; i++) {
-    var q = new st.Question(data.items[i], this);
+st.QuestionList.prototype.parseResults_ = function (data, tag) {
+  let didCountChange = false;
+  for (let i = 0; i < data.items.length; i++) {
+    const q = new st.Question(data.items[i], this);
     // See if an existing StackOverflowQuestion with same doesn't exist, or this
     // one is newer, update.
-    var existingQ = this.questions_[q.questionId];
+    let existingQ = this.questions_[q.questionId];
     if (!existingQ || q.lastActivityDate > existingQ.lastActivityDate) {
       this.questions_[q.questionId] = q;
       // If it's a new question, and there's a count callback, fire it.
@@ -250,13 +249,13 @@ st.QuestionList.prototype.parseResults_ = function(data, tag) {
  * @param {function} callback Called with the result when request succeeds.
  * @private
  */
-st.QuestionList.prototype.makeJSONPRequest_ = function(url, callback) {
+st.QuestionList.prototype.makeJSONPRequest_ = function (url, callback) {
   // Create a temporary callback function
-  var cbName = 'json' + this.jsonCount_++;
+  const cbName = 'json' + this.jsonCount_++;
   st.callbacks[cbName] = callback;
   url = url.replace('{{callback}}', cbName);
   // Append the script to the main body.
-  var script = document.createElement('script');
+  const script = document.createElement('script');
   script.type = 'text/javascript';
   script.src = url;
   document.getElementsByTagName('body')[0].appendChild(script);
@@ -268,12 +267,12 @@ st.QuestionList.prototype.makeJSONPRequest_ = function(url, callback) {
  * @param {number=} opt_period How often (in ms) to poll the StackOverflow API.
  * @param {number=} opt_quantity How many items to get.
  */
-st.QuestionList.prototype.scheduleUpdates = function(opt_period, opt_quantity) {
-  var period = opt_period != undefined ? opt_period : st.UPDATE_INTERVAL;
-  var quantity = opt_quantity != undefined ? opt_quantity : st.UPDATE_QUANTITY;
+st.QuestionList.prototype.scheduleUpdates = function (opt_period, opt_quantity) {
+  const period = opt_period !== undefined ? opt_period : st.UPDATE_INTERVAL;
+  const quantity = opt_quantity !== undefined ? opt_quantity : st.UPDATE_QUANTITY;
 
-  var ctx = this;
-  this.timer = setInterval(function() {
+  const ctx = this;
+  this.timer = setInterval(() => {
     ctx.update.call(ctx, quantity);
   }, period);
 };
@@ -282,7 +281,7 @@ st.QuestionList.prototype.scheduleUpdates = function(opt_period, opt_quantity) {
 /**
  * Persists the read/unread question state to a localStorage database.
  */
-st.QuestionList.prototype.saveQuestionState = function() {
+st.QuestionList.prototype.saveQuestionState = function () {
   localStorage.setItem('questionState', JSON.stringify(this.questionState_));
 };
 
@@ -293,7 +292,7 @@ st.QuestionList.prototype.saveQuestionState = function() {
  * @param {function} callback The function to call when the number of unread
  * questions changes.
  */
-st.QuestionList.prototype.registerCountCallback = function(callback) {
+st.QuestionList.prototype.registerCountCallback = function (callback) {
   this.countCallback = callback;
 };
 
@@ -303,31 +302,24 @@ st.QuestionList.prototype.registerCountCallback = function(callback) {
  * @param {number=} opt_state Optional parameter to specify the state.
  * @return {number} Number of unread questions.
  */
-st.QuestionList.prototype.getQuestionCount = function(opt_state) {
-  var state = opt_state == undefined ? st.State.NORMAL : opt_state;
-  var questions = this.getQuestions();
-  var count = 0;
-  for (var i = 0; i < questions.length; i++) {
-    if (questions[i].state == state) {
-      count++;
-    }
-  }
-  return count;
+st.QuestionList.prototype.getQuestionCount = function (opt_state) {
+  const state = opt_state === undefined ? st.State.NORMAL : opt_state;
+  const questions = this.getQuestions();
+  return questions.reduce((total, question) => question.state === state ? total + 1 : total, 0);
 };
 
 
 /**
  * Iterates all questions and archives the read ones.
  */
-st.QuestionList.prototype.archiveRead = function() {
-  var questions = this.getQuestions();
-  for (var i = 0; i < questions.length; i++) {
-    var q = questions[i];
-    if (q.state == st.State.READ) {
+st.QuestionList.prototype.archiveRead = function () {
+  const questions = this.getQuestions();
+  questions.forEach((q) => {
+    if (q.state === st.State.READ) {
       q.state = st.State.ARCHIVED;
     }
     this.questionState_[q.questionId] = q.state;
-  }
+  });
 
   // Then save the state.
   this.saveQuestionState();
@@ -343,12 +335,11 @@ st.QuestionList.prototype.archiveRead = function() {
  * Marks each of the questions in the specified array as read.
  * @param {!Array.<!st.Question>} questions Array of questions to operate on.
  */
-st.QuestionList.prototype.markRead = function(questions) {
-  for (var i = 0; i < questions.length; i++) {
-    var q = questions[i];
+st.QuestionList.prototype.markRead = function (questions) {
+  questions.forEach((q) => {
     q.state = st.State.READ;
     this.questionState_[q.questionId] = q.state;
-  }
+  });
 
   // Then save the state.
   this.saveQuestionState();
@@ -357,4 +348,12 @@ st.QuestionList.prototype.markRead = function(questions) {
   if (this.countCallback) {
     this.countCallback();
   }
+};
+
+st.QuestionList.prototype.archiveWithAnswers = function () {
+  const questionsWithAnswers = Object.keys(this.questions_)
+    .filter(questionId => this.questions_[questionId].answerCount > 0 && this.questions_[questionId].state !== st.State.ARCHIVED)
+    .map(questionId => this.questions_[questionId]);
+  this.markRead(questionsWithAnswers);
+  this.archiveRead();
 };
